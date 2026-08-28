@@ -1,0 +1,14 @@
+{
+  "exportedAt": "2026-08-28T00:00:00.000Z",
+  "note": "Sample dataset for SJCD Institutions Student Management System. Use the 'Import JSON' button in Students > Panel Actions to load this file. Fields: roll, name, dept, year, email, phone, totalFees, feesPaid, academics (percent), attendance (percent), status (Pass/Fail).",
+  "students": [
+    { "id": "s1", "roll": "SJCD24001", "name": "Arun Kumar", "dept": "Computer Science", "year": "3rd Year", "email": "arun.kumar@example.com", "phone": "9840012345", "totalFees": 60000, "feesPaid": 60000, "academics": 88, "attendance": 94, "status": "Pass", "addedOn": "2024-06-12" },
+    { "id": "s2", "roll": "SJCD24002", "name": "Divya Shree", "dept": "Electronics", "year": "2nd Year", "email": "divya.shree@example.com", "phone": "9840012346", "totalFees": 55000, "feesPaid": 30000, "academics": 74, "attendance": 88, "status": "Pass", "addedOn": "2024-06-14" },
+    { "id": "s3", "roll": "SJCD24003", "name": "Mohammed Faizal", "dept": "Mechanical", "year": "4th Year", "email": "faizal.m@example.com", "phone": "9840012347", "totalFees": 58000, "feesPaid": 58000, "academics": 39, "attendance": 61, "status": "Fail", "addedOn": "2024-06-15" },
+    { "id": "s4", "roll": "SJCD24004", "name": "Priya Ramesh", "dept": "Commerce", "year": "1st Year", "email": "priya.ramesh@example.com", "phone": "9840012348", "totalFees": 42000, "feesPaid": 15000, "academics": 82, "attendance": 90, "status": "Pass", "addedOn": "2024-07-01" },
+    { "id": "s5", "roll": "SJCD24005", "name": "Karthik Raja", "dept": "Computer Science", "year": "2nd Year", "email": "karthik.raja@example.com", "phone": "9840012349", "totalFees": 60000, "feesPaid": 60000, "academics": 91, "attendance": 96, "status": "Pass", "addedOn": "2024-07-03" },
+    { "id": "s6", "roll": "SJCD24006", "name": "Sneha Lakshmi", "dept": "Biotechnology", "year": "3rd Year", "email": "sneha.l@example.com", "phone": "9840012350", "totalFees": 65000, "feesPaid": 20000, "academics": 45, "attendance": 55, "status": "Fail", "addedOn": "2024-07-05" },
+    { "id": "s7", "roll": "SJCD24007", "name": "Vignesh Pillai", "dept": "Electronics", "year": "4th Year", "email": "vignesh.p@example.com", "phone": "9840012351", "totalFees": 55000, "feesPaid": 55000, "academics": 68, "attendance": 79, "status": "Pass", "addedOn": "2024-07-10" },
+    { "id": "s8", "roll": "SJCD24008", "name": "Anitha Selvam", "dept": "Commerce", "year": "1st Year", "email": "anitha.s@example.com", "phone": "9840012352", "totalFees": 42000, "feesPaid": 42000, "academics": 77, "attendance": 85, "status": "Pass", "addedOn": "2024-07-18" }
+  ]
+}

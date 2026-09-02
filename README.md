@@ -132,7 +132,61 @@ that as a next step if needed.
 
 ---
 
-## 8. Browser support
+## 8. Optional React analytics widget
+
+The Dashboard includes one extra panel, **"Live Analytics"**, powered by
+React — added on top of the site without changing any existing HTML, CSS,
+or JavaScript behavior.
+
+- `react-widget.js` is a separate, self-contained file. It only renders
+  inside `<div id="react-analytics-root">` and never reads or modifies any
+  other element on the page.
+- React and ReactDOM are loaded from a CDN in `index.html` (no npm, no
+  build step, no `node_modules`) — just two extra `<script>` tags.
+- It reads the exact same `sjcd_students` data in local storage that
+  `script.js` already manages, so there's only one source of truth. It
+  never writes data itself.
+- It shows: student count by department, pass/fail split, and a fee-status
+  breakdown (fully paid / partially paid / fully due) — all recalculated
+  live the moment a student is added, edited, or deleted.
+- **Fully optional**: delete the `<div id="react-analytics-root">` panel
+  and the three `<script>` tags for React/ReactDOM/`react-widget.js` in
+  `index.html`, and remove `react-widget.js` — the rest of the app is
+  completely unaffected.
+
+---
+
+## 9. Device & browser compatibility
+
+The site is tuned to feel right on every device class, not just resized:
+
+- **Phones** (iPhone SE up to large Android phones) — larger tap targets
+  (44px minimum), no accidental zoom when tapping form fields, safe-area
+  padding so content never sits under an iPhone notch or home indicator,
+  and a dedicated small-phone tier (≤360px) for compact screens.
+- **Tablets** (iPad, Android tablets, Surface in tablet mode) — a middle
+  layout tier (721–1024px) with its own column counts and spacing, not
+  just a stretched phone or squeezed desktop view.
+- **Laptops & desktops** — a denser, more precise layout on large monitors
+  (1440px+): more columns, tighter row spacing, since a mouse points
+  exactly where you click.
+- **Touch vs. mouse, automatically detected** — touchscreens (including
+  touch-enabled Windows laptops) get bigger buttons and no "stuck hover"
+  glow after tapping; mouse/trackpad users keep the compact desktop sizing
+  with hover feedback. This uses the CSS `pointer`/`hover` media features,
+  not device guessing.
+- **Cross-browser**: tested styling approaches for Chrome, Edge, Brave,
+  Opera, Firefox, and Safari — includes `-webkit-` prefixes for blur
+  effects (Safari-only requirement), consistent form-control styling
+  across engines, and a Firefox-specific thin-scrollbar fallback (Firefox
+  doesn't support the `::-webkit-scrollbar` styling Chromium browsers use).
+- **Cross-OS**: Android, iOS/iPadOS, Windows, macOS, and Linux all use the
+  same standard web APIs here — no OS-specific code branches were needed,
+  just standards-based CSS that each OS's browsers render consistently.
+
+---
+
+## 10. Browser support
 
 Works in all modern browsers (Chrome, Edge, Firefox, Safari) on desktop,
 laptop, tablet and mobile. Layout is responsive down to small phone screens.

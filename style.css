@@ -18,7 +18,7 @@
   --green-mid:       #3a7d55;
   --green-light:     #6fae76;
 
-  --radius-sm: 6.89px;
+  --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
@@ -69,8 +69,12 @@
   --warn: #a97a11;
 }
 
-*,*::before,*::after{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
+*,*::before,*::after{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html{
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%; /* prevent iOS auto text inflation on rotate */
+  text-size-adjust:100%;
+}
 
 body{
   margin:0;
@@ -83,7 +87,24 @@ body{
   line-height:1.55;
   transition:background var(--transition), color var(--transition);
   min-height:100vh;
+  min-height:100dvh; /* accounts for mobile browser toolbars (iOS Safari, Android Chrome) */
   position:relative;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  overscroll-behavior-y:none;
+}
+
+/* Consistent cross-browser form controls (Chrome/Edge/Brave/Opera vs Firefox vs Safari) */
+button, input, select, textarea{
+  -webkit-appearance:none; -moz-appearance:none; appearance:none;
+  border-radius:var(--radius-sm);
+}
+input[type="checkbox"], input[type="radio"]{ -webkit-appearance:auto; -moz-appearance:auto; appearance:auto; width:auto; }
+button{ touch-action:manipulation; } /* removes 300ms tap delay on mobile browsers */
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7l5 5 5-5' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center; background-size:14px; padding-right:34px !important;
 }
 
 /* black textured backdrop — subtle diagonal weave + grain, combined with theme bg */
@@ -174,8 +195,9 @@ img{ max-width:100%; display:block; }
 .navbar{
   position:sticky; top:0; z-index:100;
   background:color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
+  padding-top:env(safe-area-inset-top);
 }
 .navbar .container{ display:flex; align-items:center; justify-content:space-between; height:74px; }
 .brand{ display:flex; align-items:center; gap:12px; }
@@ -282,7 +304,7 @@ footer p{ margin:0; color:var(--text-faint); font-size:.85rem; }
    5. LOGIN MODAL
    ------------------------------------------------------------------------- */
 .modal-overlay{
-  position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px);
+  position:fixed; inset:0; background:rgba(0,0,0,.6); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
   display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px;
 }
 .modal{
@@ -301,7 +323,7 @@ footer p{ margin:0; color:var(--text-faint); font-size:.85rem; }
 .field label{ display:block; font-size:.78rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-faint); margin-bottom:6px; font-style:normal; }
 .field input, .field select{
   width:100%; padding:11px 14px; border-radius:var(--radius-sm); border:1px solid var(--border);
-  background:var(--surface-2); color:var(--text); font-size:.95rem; outline:none;
+  background:var(--surface-2); color:var(--text); font-size:16px; outline:none;
   transition:border-color var(--transition), box-shadow var(--transition);
 }
 .field input:focus, .field select:focus{ border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
@@ -321,11 +343,13 @@ footer p{ margin:0; color:var(--text-faint); font-size:.85rem; }
 /* -------------------------------------------------------------------------
    6. ADMIN LAYOUT
    ------------------------------------------------------------------------- */
-.admin-shell{ display:none; min-height:100vh; }
+.admin-shell{ display:none; min-height:100vh; min-height:100dvh; }
 .admin-shell.active{ display:flex; }
 .admin-sidebar{
   width:250px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--border);
-  display:flex; flex-direction:column; padding:22px 16px; position:sticky; top:0; height:100vh;
+  display:flex; flex-direction:column; padding:22px 16px; position:sticky; top:0;
+  height:100vh; height:100dvh;
+  padding-left:max(16px, env(safe-area-inset-left));
 }
 .admin-sidebar .brand{ padding:6px 8px 22px; border-bottom:1px solid var(--border); margin-bottom:18px; }
 .side-nav{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; flex:1; }
@@ -341,7 +365,7 @@ footer p{ margin:0; color:var(--text-faint); font-size:.85rem; }
 
 .admin-main{ flex:1; min-width:0; }
 .admin-topbar{
-  position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter:blur(14px);
+  position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--surface) 88%, transparent); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border); padding:18px 28px; display:flex; align-items:center; justify-content:space-between; gap:16px;
 }
 .admin-topbar h1{ font-size:1.3rem; margin:0; }
@@ -363,7 +387,7 @@ footer p{ margin:0; color:var(--text-faint); font-size:.85rem; }
 
 .toolbar{ display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
 .toolbar input, .toolbar select{
-  padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-size:.88rem;
+  padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-size:16px;
 }
 .toolbar input{ flex:1; min-width:180px; }
 
@@ -395,6 +419,9 @@ tbody tr:hover{ background:var(--surface-2); }
   position:fixed; bottom:24px; right:24px; z-index:2000; background:var(--surface); border:1px solid var(--accent);
   color:var(--text); padding:14px 20px; border-radius:var(--radius-md); box-shadow:var(--shadow-soft);
   display:flex; align-items:center; gap:10px; font-size:.88rem; transform:translateY(20px); opacity:0; transition:.3s ease; pointer-events:none;
+  bottom:max(24px, calc(env(safe-area-inset-bottom) + 16px));
+  right:max(24px, calc(env(safe-area-inset-right) + 16px));
+  max-width:calc(100vw - 32px);
 }
 .toast.show{ transform:translateY(0); opacity:1; }
 
@@ -436,8 +463,81 @@ tbody tr:hover{ background:var(--surface-2); }
   .brand-text .tag{ display:none; }
 }
 
+/* -------------------------------------------------------------------------
+   7b. TABLET TIER (iPad, Android tablets, Surface in tablet mode: 721–1024px)
+   A middle ground — more breathing room than phone, not as dense as desktop.
+   ------------------------------------------------------------------------- */
+@media (min-width: 721px) and (max-width: 1024px){
+  .about-grid{ grid-template-columns:repeat(2,1fr); gap:20px; }
+  .stats-grid{ grid-template-columns:repeat(2,1fr); gap:16px; }
+  .admin-sidebar{ width:220px; }
+  .admin-content{ padding:22px; }
+  .container{ padding:0 28px; }
+}
+
+/* -------------------------------------------------------------------------
+   7c. LARGE DESKTOP PRECISION TIER (1440px+)
+   More columns, tighter alignment — desktop/laptop users get a denser,
+   more precise layout since mouse pointing is exact.
+   ------------------------------------------------------------------------- */
+@media (min-width: 1440px){
+  .container{ max-width:1320px; }
+  .stats-grid{ grid-template-columns:repeat(4,1fr); }
+  .admin-sidebar{ width:270px; }
+  .admin-content{ padding:32px 36px; }
+  tbody td{ padding:11px 16px; } /* denser rows — precise clicking, more visible at once */
+}
+
+/* -------------------------------------------------------------------------
+   7d. TOUCH vs PRECISION POINTER
+   Coarse pointers (phones, tablets, touch laptops/Surface) get larger tap
+   targets. Fine pointers (mouse/trackpad) keep the compact desktop sizing
+   and hover feedback. Works the same across Chrome, Edge, Brave, Opera,
+   Firefox and Safari — all support pointer/hover media features.
+   ------------------------------------------------------------------------- */
+@media (pointer: coarse){
+  .btn-icon{ width:44px; height:44px; }
+  .row-actions button{ min-width:40px; min-height:40px; }
+  .theme-switch button{ min-width:40px; min-height:40px; }
+  .nav-toggle, .side-nav button, .btn{ min-height:44px; }
+  tbody td{ padding:15px 16px; } /* easier to tap the right row */
+  a, button, .card, .pw-wrap button{ touch-action:manipulation; }
+}
+
+/* Remove "stuck hover" glow/lift that some touchscreens trigger on tap
+   (older Android WebViews, some Samsung Internet builds) */
+@media (hover: none){
+  .btn:hover, .btn-primary:hover, .btn-danger:hover, .btn-icon:hover,
+  .nav-links a:hover, .card:hover, .side-nav button:hover,
+  tbody tr:hover, .row-actions button:hover, .row-actions .del:hover{
+    transform:none; box-shadow:none;
+  }
+}
+
+/* Foldables / very small phones (iPhone SE, small Android) */
+@media (max-width: 360px){
+  .admin-content{ padding:12px; }
+  .panel{ padding:14px; }
+  .stat-card .num{ font-size:1.3rem; }
+}
+
+/* Landscape phones — short viewport height, common when rotating for the
+   student table on a phone */
+@media (max-height: 480px) and (orientation: landscape){
+  .admin-sidebar{ position:fixed; }
+  .hero{ padding:32px 0; }
+}
+
 /* scrollbar */
 ::-webkit-scrollbar{ width:10px; height:10px; }
 ::-webkit-scrollbar-track{ background:transparent; }
 ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:99px; }
 ::-webkit-scrollbar-thumb:hover{ background:var(--accent); }
+/* Firefox scrollbar (Firefox ignores ::-webkit-scrollbar entirely) */
+*{ scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+
+.table-wrap{ -webkit-overflow-scrolling:touch; } /* momentum scroll on iOS */
+
+@media print{
+  .navbar, .admin-sidebar, .admin-topbar, .toast, .modal, .btn, footer{ display:none !important; }
+}

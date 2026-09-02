@@ -2,10 +2,10 @@
    SJCD INSTITUTIONS — Student Management System
    script.js
    ========================================================================== */
-
+ 
 (function () {
   "use strict";
-
+ 
   /* ------------------------------------------------------------------
      0. STORAGE KEYS + DEFAULTS
      ------------------------------------------------------------------ */
@@ -13,9 +13,9 @@
   const KEY_ADMIN    = "sjcd_admin";
   const KEY_THEME    = "sjcd_theme";
   const SESSION_KEY  = "sjcd_session";
-
+ 
   const DEFAULT_ADMIN = { id: "admin@sjcd210", password: "admin@sjcdaxsc" };
-
+ 
   const SEED_STUDENTS = [
     { id: "s1", roll: "SJCD24001", name: "Arun Kumar", dept: "Computer Science", year: "3rd Year", email: "arun.kumar@example.com", phone: "9840012345", totalFees: 60000, feesPaid: 60000, academics: 88, attendance: 94, status: "Pass", addedOn: "2024-06-12" },
     { id: "s2", roll: "SJCD24002", name: "Divya Shree", dept: "Electronics", year: "2nd Year", email: "divya.shree@example.com", phone: "9840012346", totalFees: 55000, feesPaid: 30000, academics: 74, attendance: 88, status: "Pass", addedOn: "2024-06-14" },
@@ -26,7 +26,7 @@
     { id: "s7", roll: "SJCD24007", name: "Vignesh Pillai", dept: "Electronics", year: "4th Year", email: "vignesh.p@example.com", phone: "9840012351", totalFees: 55000, feesPaid: 55000, academics: 68, attendance: 79, status: "Pass", addedOn: "2024-07-10" },
     { id: "s8", roll: "SJCD24008", name: "Anitha Selvam", dept: "Commerce", year: "1st Year", email: "anitha.s@example.com", phone: "9840012352", totalFees: 42000, feesPaid: 42000, academics: 77, attendance: 85, status: "Pass", addedOn: "2024-07-18" }
   ];
-
+ 
   /* ------------------------------------------------------------------
      1. STORAGE HELPERS
      ------------------------------------------------------------------ */
@@ -50,25 +50,31 @@
       return false;
     }
   }
-
+ 
   function getStudents() { return readJSON(KEY_STUDENTS, null) || []; }
-  function setStudents(list) { writeJSON(KEY_STUDENTS, list); }
+  function setStudents(list) {
+    writeJSON(KEY_STUDENTS, list);
+    // Notify any listeners (e.g. the optional React analytics widget) that
+    // student data changed in THIS tab. Purely additive — nothing else
+    // in this file reads or depends on this event.
+    window.dispatchEvent(new CustomEvent("sjcd:students-updated"));
+  }
   function getAdmin() { return readJSON(KEY_ADMIN, null) || { ...DEFAULT_ADMIN }; }
   function setAdmin(obj) { writeJSON(KEY_ADMIN, obj); }
-
+ 
   function initStorage() {
     if (localStorage.getItem(KEY_STUDENTS) === null) setStudents(SEED_STUDENTS);
     if (localStorage.getItem(KEY_ADMIN) === null) setAdmin(DEFAULT_ADMIN);
   }
   initStorage();
-
+ 
   /* ------------------------------------------------------------------
      2. THEME (light / dark / system)
      ------------------------------------------------------------------ */
   const htmlEl = document.documentElement;
   const bodyEl = document.body;
   const mq = window.matchMedia("(prefers-color-scheme: dark)");
-
+ 
   function resolveTheme(pref) {
     if (pref === "system") return mq.matches ? "dark" : "light";
     return pref;
@@ -88,16 +94,16 @@
     applyTheme(pref);
   }
   function currentThemePref() { return readJSON(KEY_THEME, "dark"); }
-
+ 
   applyTheme(currentThemePref());
   mq.addEventListener("change", function () {
     if (currentThemePref() === "system") applyTheme("system");
   });
-
+ 
   document.querySelectorAll(".theme-switch button").forEach(function (btn) {
     btn.addEventListener("click", function () { setThemePref(btn.dataset.themeChoice); });
   });
-
+ 
   /* ------------------------------------------------------------------
      3. TOAST
      ------------------------------------------------------------------ */
@@ -110,20 +116,20 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2800);
   }
-
+ 
   /* ------------------------------------------------------------------
      4. MODAL HELPERS
      ------------------------------------------------------------------ */
   function openModal(id) { document.getElementById(id).classList.remove("hidden"); }
   function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
-
+ 
   document.querySelectorAll(".modal-overlay").forEach(function (ov) {
     ov.addEventListener("click", function (e) { if (e.target === ov) ov.classList.add("hidden"); });
   });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") document.querySelectorAll(".modal-overlay:not(.hidden)").forEach(function (ov) { ov.classList.add("hidden"); });
   });
-
+ 
   document.querySelectorAll("[data-toggle-pw]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       const input = document.getElementById(btn.dataset.togglePw);
@@ -132,7 +138,7 @@
       btn.textContent = isPw ? "hide" : "show";
     });
   });
-
+ 
   /* ------------------------------------------------------------------
      5. LOGIN FLOW
      ------------------------------------------------------------------ */
@@ -141,7 +147,7 @@
   const closeLoginBtn = document.getElementById("closeLoginBtn");
   const loginForm = document.getElementById("loginForm");
   const loginMsg = document.getElementById("loginMsg");
-
+ 
   [openLoginBtn, heroLoginBtn].forEach(function (btn) {
     btn.addEventListener("click", function () {
       loginMsg.className = "form-msg";
@@ -151,13 +157,13 @@
     });
   });
   closeLoginBtn.addEventListener("click", function () { closeModal("loginOverlay"); });
-
+ 
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
     const id = document.getElementById("loginId").value.trim();
     const pw = document.getElementById("loginPw").value;
     const admin = getAdmin();
-
+ 
     if (id === admin.id && pw === admin.password) {
       sessionStorage.setItem(SESSION_KEY, "1");
       closeModal("loginOverlay");
@@ -168,13 +174,13 @@
       loginMsg.className = "form-msg error";
     }
   });
-
+ 
   document.getElementById("logoutBtn").addEventListener("click", function () {
     sessionStorage.removeItem(SESSION_KEY);
     exitAdmin();
     showToast("Logged out.");
   });
-
+ 
   function enterAdmin() {
     document.getElementById("publicSite").classList.add("hidden");
     document.getElementById("adminShell").classList.add("active");
@@ -187,12 +193,12 @@
     document.getElementById("publicSite").classList.remove("hidden");
     renderPublicStats();
   }
-
+ 
   /* ------------------------------------------------------------------
      6. ADMIN NAVIGATION (views + mobile sidebar)
      ------------------------------------------------------------------ */
   const viewTitles = { dashboard: "Dashboard", students: "Students", settings: "Settings" };
-
+ 
   function switchView(view) {
     if (view === "site") { exitAdmin(); return; }
     document.querySelectorAll(".side-nav .nav-item").forEach(function (b) {
@@ -208,14 +214,14 @@
   document.querySelectorAll(".side-nav .nav-item").forEach(function (btn) {
     btn.addEventListener("click", function () { switchView(btn.dataset.view); });
   });
-
+ 
   const sidebar = document.getElementById("adminSidebar");
   const sidebarBackdrop = document.getElementById("sidebarBackdrop");
   function openSidebarMobile() { sidebar.classList.add("open"); sidebarBackdrop.classList.add("show"); }
   function closeSidebarMobile() { sidebar.classList.remove("open"); sidebarBackdrop.classList.remove("show"); }
   document.getElementById("sidebarToggle").addEventListener("click", openSidebarMobile);
   sidebarBackdrop.addEventListener("click", closeSidebarMobile);
-
+ 
   document.getElementById("navToggle").addEventListener("click", function () {
     const links = document.querySelector(".nav-links");
     links.style.display = links.style.display === "flex" ? "none" : "flex";
@@ -228,7 +234,7 @@
     links.style.padding = "12px 24px";
     links.style.borderBottom = "1px solid var(--border)";
   });
-
+ 
   /* ------------------------------------------------------------------
      7. STATS CALCULATION
      ------------------------------------------------------------------ */
@@ -258,7 +264,7 @@
   }
   function round1(n) { return Math.round(n * 10) / 10; }
   function formatMoney(n) { return "₹" + Number(n || 0).toLocaleString("en-IN"); }
-
+ 
   /* ------------------------------------------------------------------
      8. RENDERING
      ------------------------------------------------------------------ */
@@ -272,7 +278,7 @@
     document.getElementById("pubPass").textContent = stats.passPct + "%";
     document.getElementById("pubFees").textContent = stats.feesDuePct + "%";
   }
-
+ 
   function renderDashboard() {
     const students = getStudents();
     const stats = computeStats(students);
@@ -286,7 +292,7 @@
     document.getElementById("barPass").style.width = stats.passPct + "%";
     document.getElementById("barFeesDue").style.width = stats.feesDuePct + "%";
     document.getElementById("barAttendance").style.width = stats.attendanceAvg + "%";
-
+ 
     const recent = [...students].sort(function (a, b) { return (b.addedOn || "").localeCompare(a.addedOn || ""); }).slice(0, 6);
     const body = document.getElementById("recentTableBody");
     body.innerHTML = recent.length ? recent.map(function (s) {
@@ -299,7 +305,7 @@
         "</tr>";
     }).join("") : "<tr><td colspan='5' style='text-align:center; color:var(--text-faint);'>No students yet.</td></tr>";
   }
-
+ 
   function statusPill(status) {
     return "<span class='pill " + (status === "Pass" ? "pill-pass" : "pill-fail") + "'>" + status + "</span>";
   }
@@ -319,7 +325,7 @@
       return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
     });
   }
-
+ 
   function populateDeptFilter(students) {
     const depts = Array.from(new Set(students.map(function (s) { return s.dept; }).filter(Boolean))).sort();
     const select = document.getElementById("filterDept");
@@ -327,20 +333,20 @@
     select.innerHTML = '<option value="">All Departments</option>' +
       depts.map(function (d) { return "<option value='" + escapeHtml(d) + "'>" + escapeHtml(d) + "</option>"; }).join("");
     select.value = depts.includes(current) ? current : "";
-
+ 
     const datalist = document.getElementById("deptList");
     datalist.innerHTML = depts.map(function (d) { return "<option value='" + escapeHtml(d) + "'>"; }).join("");
   }
-
+ 
   function renderStudentsTable() {
     const students = getStudents();
     populateDeptFilter(students);
-
+ 
     const search = document.getElementById("searchInput").value.trim().toLowerCase();
     const deptFilter = document.getElementById("filterDept").value;
     const statusFilter = document.getElementById("filterStatus").value;
     const feesFilter = document.getElementById("filterFees").value;
-
+ 
     let filtered = students.filter(function (s) {
       const matchesSearch = !search ||
         s.name.toLowerCase().includes(search) ||
@@ -352,12 +358,12 @@
       const matchesFees = !feesFilter || (feesFilter === "paid" ? due <= 0 : due > 0);
       return matchesSearch && matchesDept && matchesStatus && matchesFees;
     });
-
+ 
     filtered.sort(function (a, b) { return a.name.localeCompare(b.name); });
-
+ 
     const body = document.getElementById("studentsTableBody");
     const emptyState = document.getElementById("emptyState");
-
+ 
     if (filtered.length === 0) {
       body.innerHTML = "";
       emptyState.classList.remove("hidden");
@@ -381,31 +387,31 @@
       }).join("");
     }
   }
-
+ 
   function renderAll() {
     renderDashboard();
     renderStudentsTable();
     renderPublicStats();
   }
-
+ 
   ["searchInput"].forEach(function (id) {
     document.getElementById(id).addEventListener("input", renderStudentsTable);
   });
   ["filterDept", "filterStatus", "filterFees"].forEach(function (id) {
     document.getElementById(id).addEventListener("change", renderStudentsTable);
   });
-
+ 
   /* ------------------------------------------------------------------
      9. ADD / EDIT STUDENT
      ------------------------------------------------------------------ */
   const studentForm = document.getElementById("studentForm");
   const studentMsg = document.getElementById("studentMsg");
-
+ 
   function openStudentModal(editId) {
     studentForm.reset();
     studentMsg.className = "form-msg";
     document.getElementById("studentEditId").value = editId || "";
-
+ 
     if (editId) {
       const s = getStudents().find(function (x) { return x.id === editId; });
       if (s) {
@@ -429,28 +435,28 @@
     }
     openModal("studentOverlay");
   }
-
+ 
   document.getElementById("addStudentBtn").addEventListener("click", function () { openStudentModal(null); });
   document.getElementById("addStudentTopBtn").addEventListener("click", function () { openStudentModal(null); });
   document.getElementById("closeStudentBtn").addEventListener("click", function () { closeModal("studentOverlay"); });
-
+ 
   document.getElementById("sAcademics").addEventListener("input", function () {
     const val = Number(this.value);
     if (!isNaN(val) && this.value !== "") {
       document.getElementById("sStatus").value = val >= 35 ? "Pass" : "Fail";
     }
   });
-
+ 
   studentForm.addEventListener("submit", function (e) {
     e.preventDefault();
     const editId = document.getElementById("studentEditId").value;
-
+ 
     const roll = document.getElementById("sRoll").value.trim();
     const totalFees = Number(document.getElementById("sTotalFees").value);
     const feesPaid = Number(document.getElementById("sFeesPaid").value);
     const academics = Number(document.getElementById("sAcademics").value);
     const attendance = Number(document.getElementById("sAttendance").value);
-
+ 
     if (feesPaid > totalFees) {
       studentMsg.textContent = "Fees paid cannot exceed total fees.";
       studentMsg.className = "form-msg error";
@@ -461,7 +467,7 @@
       studentMsg.className = "form-msg error";
       return;
     }
-
+ 
     const students = getStudents();
     const dupRoll = students.find(function (s) { return s.roll.toLowerCase() === roll.toLowerCase() && s.id !== editId; });
     if (dupRoll) {
@@ -469,7 +475,7 @@
       studentMsg.className = "form-msg error";
       return;
     }
-
+ 
     const data = {
       roll: roll,
       name: document.getElementById("sName").value.trim(),
@@ -483,7 +489,7 @@
       attendance: attendance,
       status: document.getElementById("sStatus").value
     };
-
+ 
     if (editId) {
       const idx = students.findIndex(function (s) { return s.id === editId; });
       if (idx > -1) students[idx] = { ...students[idx], ...data };
@@ -494,17 +500,17 @@
       students.push(data);
       showToast("Student added successfully.");
     }
-
+ 
     setStudents(students);
     closeModal("studentOverlay");
     renderAll();
   });
-
+ 
   /* ------------------------------------------------------------------
      10. EDIT / DELETE (event delegation on students table)
      ------------------------------------------------------------------ */
   let pendingDeleteId = null;
-
+ 
   document.getElementById("studentsTableBody").addEventListener("click", function (e) {
     const editBtn = e.target.closest("[data-edit]");
     const delBtn = e.target.closest("[data-del]");
@@ -517,12 +523,12 @@
       openModal("confirmOverlay");
     }
   });
-
+ 
   document.getElementById("confirmCancelBtn").addEventListener("click", function () {
     pendingDeleteId = null;
     closeModal("confirmOverlay");
   });
-
+ 
   document.getElementById("confirmOkBtn").addEventListener("click", function () {
     if (pendingDeleteId) {
       const students = getStudents().filter(function (s) { return s.id !== pendingDeleteId; });
@@ -533,20 +539,20 @@
     }
     closeModal("confirmOverlay");
   });
-
+ 
   /* ------------------------------------------------------------------
      11. SETTINGS — CHANGE ADMIN CREDENTIALS
      ------------------------------------------------------------------ */
   const settingsForm = document.getElementById("settingsForm");
   const settingsMsg = document.getElementById("settingsMsg");
-
+ 
   document.querySelector('[data-view="settings"]').addEventListener("click", function () {
     document.getElementById("newId").value = getAdmin().id;
     settingsForm.reset();
     document.getElementById("newId").value = getAdmin().id;
     settingsMsg.className = "form-msg";
   });
-
+ 
   settingsForm.addEventListener("submit", function (e) {
     e.preventDefault();
     const admin = getAdmin();
@@ -554,7 +560,7 @@
     const newId = document.getElementById("newId").value.trim();
     const newPw = document.getElementById("newPw").value;
     const confirmPw = document.getElementById("confirmPw").value;
-
+ 
     if (curPw !== admin.password) {
       settingsMsg.textContent = "Current password is incorrect.";
       settingsMsg.className = "form-msg error";
@@ -575,7 +581,7 @@
       settingsMsg.className = "form-msg error";
       return;
     }
-
+ 
     setAdmin({ id: newId, password: newPw });
     document.getElementById("sidebarAdminId").textContent = newId;
     settingsMsg.textContent = "Credentials updated successfully.";
@@ -585,7 +591,7 @@
     document.getElementById("confirmPw").value = "";
     showToast("Admin credentials updated.");
   });
-
+ 
   /* ------------------------------------------------------------------
      12. DANGER ZONE — CLEAR ALL
      ------------------------------------------------------------------ */
@@ -595,7 +601,7 @@
     pendingDeleteId = "__ALL__";
     openModal("confirmOverlay");
   });
-
+ 
   const originalConfirmHandler = document.getElementById("confirmOkBtn");
   originalConfirmHandler.addEventListener("click", function () {
     if (pendingDeleteId === "__ALL__") {
@@ -605,7 +611,7 @@
       pendingDeleteId = null;
     }
   });
-
+ 
   /* ------------------------------------------------------------------
      13. EXPORT / IMPORT JSON
      ------------------------------------------------------------------ */
@@ -622,11 +628,11 @@
     URL.revokeObjectURL(url);
     showToast("Student data exported.");
   });
-
+ 
   document.getElementById("importBtn").addEventListener("click", function () {
     document.getElementById("importFile").click();
   });
-
+ 
   document.getElementById("importFile").addEventListener("change", function (e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -663,7 +669,7 @@
     };
     reader.readAsText(file);
   });
-
+ 
   /* ------------------------------------------------------------------
      14. REAL-TIME SYNC ACROSS TABS
      ------------------------------------------------------------------ */
@@ -674,15 +680,16 @@
     }
     if (e.key === KEY_THEME) applyTheme(currentThemePref());
   });
-
+ 
   /* ------------------------------------------------------------------
      15. INIT
      ------------------------------------------------------------------ */
   document.getElementById("year").textContent = new Date().getFullYear();
   renderPublicStats();
-
+ 
   if (sessionStorage.getItem(SESSION_KEY) === "1") {
     enterAdmin();
   }
-
+ 
 })();
+ 

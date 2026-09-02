@@ -2,7 +2,13 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f7f4ea" media="(prefers-color-scheme: light)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
 <title>SJCD Institutions — Student Management System</title>
 <meta name="description" content="SJCD Institutions Student Management System — admissions, fees, academics and attendance, managed in one place.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
@@ -290,6 +296,13 @@
             </table>
           </div>
         </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Live Analytics <span style="font-size:11px; font-weight:400; color:var(--text-faint); border:1px solid var(--border); border-radius:999px; padding:2px 8px; margin-left:8px;">⚛ React widget</span></h2>
+          </div>
+          <div id="react-analytics-root" style="padding: 4px 2px 8px;"></div>
+        </div>
       </section>
 
       <!-- STUDENTS VIEW -->
@@ -480,5 +493,14 @@
 <div class="toast" id="toast"></div>
 
 <script src="script.js"></script>
+
+<!-- React analytics widget: loaded via CDN, no build step, no npm.
+     Renders ONLY inside #react-analytics-root and never touches
+     anything script.js manages. Safe to remove this block and the
+     matching <div id="react-analytics-root"> above without breaking
+     any other part of the site. -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="react-widget.js"></script>
 </body>
 </html>

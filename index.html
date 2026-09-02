@@ -15,12 +15,12 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="dark">
-
+ 
 <!-- =========================================================
      PUBLIC SITE
      ========================================================= -->
 <div id="publicSite">
-
+ 
   <nav class="navbar">
     <div class="container">
       <div class="brand">
@@ -30,14 +30,14 @@
           <div class="tag">Ashok Nagar · Chennai</div>
         </div>
       </div>
-
+ 
       <ul class="nav-links">
         <li><a href="#home" class="active">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#stats">Overview</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-
+ 
       <div class="nav-right">
         <div class="theme-switch" id="themeSwitch" role="group" aria-label="Theme selector">
           <button type="button" data-theme-choice="light" title="Light theme">☀</button>
@@ -49,7 +49,7 @@
       </div>
     </div>
   </nav>
-
+ 
   <header class="hero" id="home">
     <div class="container">
       <div class="hero-copy">
@@ -61,7 +61,7 @@
           <a href="#about" class="btn btn-outline">Learn more ↓</a>
         </div>
       </div>
-
+ 
       <div class="hero-panel">
         <div class="stat-row">
           <div class="hero-stat"><div class="num" id="heroTotalStudents">0</div><div class="lbl">Students</div></div>
@@ -73,7 +73,7 @@
       </div>
     </div>
   </header>
-
+ 
   <section id="about">
     <div class="container">
       <div class="section-head">
@@ -114,7 +114,7 @@
       </div>
     </div>
   </section>
-
+ 
   <section id="stats" style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
     <div class="container">
       <div class="section-head">
@@ -128,7 +128,7 @@
       </div>
     </div>
   </section>
-
+ 
   <section id="contact">
     <div class="container">
       <div class="section-head">
@@ -160,7 +160,7 @@
       </div>
     </div>
   </section>
-
+ 
   <footer>
     <div class="container">
       <p>© <span id="year"></span> SJCD Institutions, Ashok Nagar, Chennai. All rights reserved.</p>
@@ -168,7 +168,7 @@
     </div>
   </footer>
 </div>
-
+ 
 <!-- =========================================================
      LOGIN MODAL
      ========================================================= -->
@@ -195,7 +195,7 @@
     <div class="demo-creds">Default credentials — ID: <code>admin@sjcd210</code> · Password: <code>admin@sjcdaxsc</code><br>Change these any time from Settings after logging in.</div>
   </div>
 </div>
-
+ 
 <!-- =========================================================
      ADMIN DASHBOARD
      ========================================================= -->
@@ -225,7 +225,7 @@
       <button class="btn btn-outline btn-block" id="logoutBtn">↩ Log Out</button>
     </div>
   </aside>
-
+ 
   <main class="admin-main">
     <div class="admin-topbar">
       <div style="display:flex; align-items:center; gap:10px;">
@@ -234,9 +234,9 @@
       </div>
       <button class="btn btn-primary" id="addStudentTopBtn">+ Add Student</button>
     </div>
-
+ 
     <div class="admin-content">
-
+ 
       <!-- DASHBOARD VIEW -->
       <section id="view-dashboard">
         <div class="stats-grid">
@@ -264,7 +264,7 @@
             <div class="bar"><span id="barAttendance" style="width:0%"></span></div>
           </div>
         </div>
-
+ 
         <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
           <div class="stat-card">
             <div class="top"><div class="ic">📚</div></div>
@@ -282,7 +282,7 @@
             <div class="lbl">Total Fees Pending</div>
           </div>
         </div>
-
+ 
         <div class="panel">
           <div class="panel-head">
             <h2>Recently Added Students</h2>
@@ -296,7 +296,7 @@
             </table>
           </div>
         </div>
-
+ 
         <div class="panel">
           <div class="panel-head">
             <h2>Live Analytics <span style="font-size:11px; font-weight:400; color:var(--text-faint); border:1px solid var(--border); border-radius:999px; padding:2px 8px; margin-left:8px;">⚛ React widget</span></h2>
@@ -304,7 +304,7 @@
           <div id="react-analytics-root" style="padding: 4px 2px 8px;"></div>
         </div>
       </section>
-
+ 
       <!-- STUDENTS VIEW -->
       <section id="view-students" class="hidden">
         <div class="panel">
@@ -317,7 +317,7 @@
               <button class="btn btn-primary btn-sm" id="addStudentBtn">+ Add Student</button>
             </div>
           </div>
-
+ 
           <div class="toolbar">
             <input type="text" id="searchInput" placeholder="Search by name, roll no, or department…">
             <select id="filterDept"><option value="">All Departments</option></select>
@@ -332,7 +332,7 @@
               <option value="due">Due</option>
             </select>
           </div>
-
+ 
           <div class="table-wrap">
             <table>
               <thead>
@@ -350,7 +350,7 @@
           </div>
         </div>
       </section>
-
+ 
       <!-- SETTINGS VIEW -->
       <section id="view-settings" class="hidden">
         <div class="panel" style="max-width:560px;">
@@ -386,18 +386,18 @@
             <button type="submit" class="btn btn-primary btn-block">Save Credentials</button>
           </form>
         </div>
-
+ 
         <div class="panel" style="max-width:560px;">
           <div class="panel-head"><h2>Danger Zone</h2></div>
           <p style="color:var(--text-dim); font-size:.9rem;">Remove every student record. This cannot be undone.</p>
           <button class="btn btn-danger" id="clearAllBtn">🗑 Delete All Student Records</button>
         </div>
       </section>
-
+ 
     </div>
   </main>
 </div>
-
+ 
 <!-- =========================================================
      ADD / EDIT STUDENT MODAL
      ========================================================= -->
@@ -477,7 +477,7 @@
     </form>
   </div>
 </div>
-
+ 
 <!-- CONFIRM DELETE MODAL -->
 <div class="modal-overlay hidden" id="confirmOverlay">
   <div class="modal" style="max-width:380px; text-align:center;">
@@ -489,11 +489,11 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script src="script.js"></script>
-
+ 
 <!-- React analytics widget: loaded via CDN, no build step, no npm.
      Renders ONLY inside #react-analytics-root and never touches
      anything script.js manages. Safe to remove this block and the
@@ -504,3 +504,4 @@
 <script src="react-widget.js"></script>
 </body>
 </html>
+ 
